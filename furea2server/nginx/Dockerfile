@@ -1,9 +1,4 @@
-FROM python:3.7
+FROM nginx:1.17.4-alpine
 
-MAINTAINER furea2
-
-RUN mkdir /server
-WORKDIR /server
-COPY requirements.txt /server/requirements.txt
-
-RUN pip install -r requirements.txt
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d

@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:12.0-alpine
+    environment:
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=hello_django
+      - POSTGRES_DB=hello_django_dev
+  server:
+    build: furea2server
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/furea2server
+    ports:
+      - 8000:8000
+    depends_on:
+      - db

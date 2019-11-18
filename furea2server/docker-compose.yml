@@ -1,18 +1,31 @@
 version: '3'
 
-volumes:
-  furea2server.db.volume:
-    name: furea2server.db.volume
-
 services:
-  nginx:
-    image: nginx:1.13
-    container_name: furea2server.nginx
-    ports:
-      - "8000:8000"
+  furea2server:
+    build: ./furea2server
+    command: bash -c 'python manage.py migrate && python /server/manage.py runserver 0.0.0.0:8000'
     volumes:
-      - ./nginx/conf:/etc/nginx/conf.d
-      - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
-      - ./static:/static
+      - .:/furea2server
+    expose:
+      - 8000
     depends_on:
-      - web
+      - postgres
+  postgres:
+    restart: always
+    # 公式からイメージをpull
+    image: postgres:latest
+    # データベースの永続化
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+#    ports:
+#      - 5432:5432
+  nginx:
+    build: ./nginx
+    # http://localhost:1337/
+    ports:
+      - 1337:80
+    depends_on:
+      - furea2server
+
+volumes:
+    postgres_data:

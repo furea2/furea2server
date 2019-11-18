@@ -46,8 +46,10 @@ def create(response):
             response.user.todolist.add(t)
 
         return HttpResponseRedirect("/%i" %t.id)
+
     else:
         form = CreateNewList()
+
     return  render(response, "portfolio/create.html", {"form":form})
 
 def view(response):
